@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOGCM – Boletim de Ocorrência GCM</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px auto; max-width: 900px; background: #f4f4f9; color: #333; padding: 20px; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+h1 { text-align: center; color: #003366; margin-bottom: 5px; }
+h2 { margin-top: 30px; border-bottom: 2px solid #003366; padding-bottom: 5px; color: #003366; }
+p { text-align: center; }
+label { font-weight: bold; margin-top: 12px; display: block; }
+input, textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+textarea { resize: vertical; }
+.autocomplete-list { border: 1px solid #ccc; max-height: 150px; overflow-y: auto; position: absolute; background: white; z-index: 1000; width: calc(100% - 18px); border-radius: 6px; }
+.autocomplete-item { padding: 6px; cursor: pointer; }
+.autocomplete-item:hover { background: #003366; color: white; }
+.campo { position: relative; margin-bottom: 20px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag { background: #003366; color: white; padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 6px; font-size: 14px; }
+.tag span { cursor: pointer; font-weight: bold; }
+button { background: #003366; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; margin-top: 20px; }
+button:hover { background: #0055aa; }
+#resumo { background:#e8eaf6; padding:15px; border-radius:8px; margin-top:20px; }
+#resumo p { margin:5px 0; }
+</style>
+</head>
+<body>
+
+<h1>BOGCM – BOLETIM DE OCORRÊNCIA<br>GUARDA CIVIL METROPOLITANA</h1>
+<p><strong>Estado de São Paulo</strong></p>
+
+<h2>Dados da Ocorrência</h2>
+<div class="campo">
+  <label>Número do BOGCM:</label>
+  <input type="text" id="numBO" readonly>
+</div>
+<div class="campo">
+  <label>Data:</label>
+  <input type="text" id="data" readonly>
+</div>
+<div class="campo">
+  <label>Hora:</label>
+  <input type="time" id="hora">
+</div>
+<div class="campo">
+  <label>Local:</label>
+  <input type="text" id="local" placeholder="Digite o local da ocorrência">
+</div>
+
+<h2>Guarnição Responsável</h2>
+<div class="campo">
+  <label>Equipe:</label>
+  <input type="text" id="equipe" placeholder="Digite o nome do GCM e pressione Enter">
+  <div id="equipe-list" class="autocomplete-list"></div>
+  <div id="equipe-tags" class="tags"></div>
+</div>
+
+<h2>Elemento(s) da Ocorrência</h2>
+<div class="campo">
+  <label>Nome do Elemento:</label>
+  <input type="text" id="nomeElementoInput" placeholder="Digite o nome do envolvido">
+</div>
+<div class="campo">
+  <label>RG:</label>
+  <input type="text" id="rgElementoInput" placeholder="Digite o RG do envolvido">
+</div>
+<button type="button" onclick="adicionarElemento()">Adicionar Elemento</button>
+<div id="elementos-tags" class="tags"></div>
+
+<h2>Enquadramento Legal</h2>
+<div class="campo">
+  <input type="text" id="enquadramento" placeholder="Digite o artigo legal">
+  <div id="enquadramento-list" class="autocomplete-list"></div>
+  <div id="enquadramento-tags" class="tags"></div>
+</div>
+
+<h2>Descrição dos Fatos</h2>
+<div class="campo">
+  <textarea id="descricao" rows="4" placeholder="Relate os fatos aqui..."></textarea>
+</div>
+
+<h2>Veículo Apreendido</h2>
+<div class="campo">
+  <input type="text" id="veiculo" placeholder="Informações do veículo">
+</div>
+
+<h2>Materiais Apreendidos</h2>
+<div class="campo">
+  <textarea id="materiais" rows="3" placeholder="Liste os materiais apreendidos"></textarea>
+</div>
+
+<button onclick="gerarResumo()">Exibir Ocorrência</button>
+
+<h2>Resumo da Ocorrência</h2>
+<div id="resumo"></div>
+
+<script>
+// Autocomplete
+function setupAutocomplete(inputId,listId,tagsId,dataList){
+  const input=document.getElementById(inputId);
+  const list=document.getElementById(listId);
+  const tags=document.getElementById(tagsId);
+  function addTag(value){
+    if([...tags.children].some(tag=>tag.dataset.value===value)) return;
+    const tag=document.createElement("div");
+    tag.classList.add("tag");
+    tag.dataset.value=value;
+    tag.innerHTML=`${value} <span>❌</span>`;
+    tag.querySelector("span").onclick=()=>tag.remove();
+    tags.appendChild(tag);
+  }
+  input.addEventListener("input",function(){
+    const valor=this.value.toLowerCase();
+    list.innerHTML="";
+    if(!valor) return;
+    dataList.filter(item=>item.toLowerCase().includes(valor)).forEach(item=>{
+      const div=document.createElement("div");
+      div.textContent=item; div.classList.add("autocomplete-item");
+      div.onclick=()=>{addTag(item); input.value=""; list.innerHTML="";};
+      list.appendChild(div);
+    });
+  });
+  input.addEventListener("keydown",function(e){
+    if(e.key==="Enter" && input.value.trim()!==""){
+      addTag(input.value.trim()); input.value=""; list.innerHTML=""; e.preventDefault();
+    }
+  });
+  document.addEventListener("click",e=>{if(e.target!==input) list.innerHTML=""});
+}
+
+// Inicializa autocompletes
+const nomesGCM = ["Carlos","Fernanda","João","Mariana","Rafael","Paula"];
+const artigos = ["Art. 129 - Lesão Corporal","Art. 163 - Dano a Patrimônio Particular","Art. 233 - Ato Obsceno",
+"Art. 138 - Calúnia","Art. 139 - Difamação","Art. 140 - Injúria","Art. 147 - Ameaça"];
+setupAutocomplete("equipe","equipe-list","equipe-tags",nomesGCM);
+setupAutocomplete("enquadramento","enquadramento-list","enquadramento-tags",artigos);
+
+// Elementos
+const elementos=[];
+function adicionarElemento() {
+  const nome=document.getElementById("nomeElementoInput").value.trim();
+  const rg=document.getElementById("rgElementoInput").value.trim();
+  if(!nome) return alert("Digite o nome do elemento!");
+  const tag=document.createElement("div");
+  tag.classList.add("tag"); tag.dataset.nome=nome; tag.dataset.rg=rg;
+  tag.innerHTML=`${nome} (RG: ${rg || 'N/A'}) <span>❌</span>`;
+  tag.querySelector("span").onclick=()=>{tag.remove(); const idx=elementos.findIndex(e=>e.nome===nome&&e.rg===rg); if(idx>-1) elementos.splice(idx,1);};
+  elementos.push({nome,rg}); document.getElementById("elementos-tags").appendChild(tag);
+  document.getElementById("nomeElementoInput").value=""; document.getElementById("rgElementoInput").value="";
+}
+
+// Número B.O aleatório
+function gerarNumeroBO(){
+  const numeros=Math.floor(Math.random()*100000000).toString().padStart(8,'0');
+  const letras=String.fromCharCode(65+Math.floor(Math.random()*26))+String.fromCharCode(65+Math.floor(Math.random()*26));
+  return numeros.substring(0,4)+letras+numeros.substring(4,8);
+}
+document.getElementById("numBO").value = gerarNumeroBO();
+
+// Data automática
+document.getElementById("data").value = new Date().toLocaleDateString('pt-BR');
+
+// Exibir resumo
+function gerarResumo(){
+  const resumoDiv = document.getElementById("resumo");
+  const numBO = document.getElementById("numBO").value || "N/A";
+  const data = document.getElementById("data").value || "N/A";
+  const hora = document.getElementById("hora").value || "N/A";
+  const local = document.getElementById("local").value || "N/A";
+
+  const equipe = [...document.getElementById("equipe-tags").children].map(tag => tag.dataset.value).join(', ') || 'N/A';
+  const enquadramento = [...document.getElementById("enquadramento-tags").children].map(tag => tag.dataset.value).join(', ') || "N/A";
+  const descricao = document.getElementById("descricao").value || "N/A";
+  const veiculo = document.getElementById("veiculo").value || "N/A";
+  const materiais = document.getElementById("materiais").value || "N/A";
+
+  const elementosStr = elementos.length 
+    ? elementos.map((el, i) => `<p>Suspeito ${i+1}:<br>Nome: ${el.nome}<br>RG: ${el.rg || 'N/A'}</p>`).join("")
+    : "<p>Nome: N/A<br>RG: N/A</p>";
+
+  resumoDiv.innerHTML = 
+`<p><b>--- BOGCM – BOLETIM DE OCORRÊNCIA GUARDA CIVIL METROPOLITANA</b></p>
+<p>Número do BOGCM: ${numBO}<br>Data/Hora: ${data} ${hora}<br>Local: ${local}</p>
+<p>--- Agentes Responsáveis ---<br> ${equipe}</p>
+<p>--- Suspeitos da Ocorrência ---</p>
+${elementosStr}
+<p>--- Enquadramento Legal ---<br>${enquadramento}</p>
+<p>--- Descrição dos Fatos ---<br>${descricao}</p>
+<p>--- Veículo Apreendido ---<br>${veiculo}</p>
+<p>--- Materiais Apreendidos ---<br>${materiais}</p>`;
+}
+
+</script>
+
+</body>
+</html>
