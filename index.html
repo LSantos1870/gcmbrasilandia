@@ -195,22 +195,24 @@ function gerarResumo(){
     ? elementos.map((el, i) => `<p>Suspeito ${i+1}:<br>Nome: ${el.nome}<br>RG: ${el.rg || 'N/A'}</p>`).join("")
     : "<p>Nome: N/A<br>RG: N/A</p>";
 
-  resumoDiv.innerHTML = 
+   resumoDiv.innerHTML = 
 `<p><b> BOGCM – BOLETIM DE OCORRÊNCIA GUARDA CIVIL METROPOLITANA</b></p>
 <p>Número do BOGCM: ${numBO}<br>Data/Hora: ${data} ${hora}<br>Local: ${local}</p>
-<p></p><p>--- Agentes Responsáveis ---</p> <br> ${equipe}  
-<p></p><p>--- Suspeitos da Ocorrência ---</p><p>
-${elementosStr}</p>
-<p></p><p>--- Enquadramento Legal ---</p> <br>${enquadramento}
-<p></p><p>--- Descrição dos Fatos ---</p> <br>${descricao}
-<p></p><p>--- Veículo Apreendido ---</p> <br>${veiculo}
-<p></p><p>--- Materiais Apreendidos ---</p> <br>${materiais}`;
+<p>--- Agentes Responsáveis ---<br> </p><p>${equipe}</p>
+<p><p>--- Suspeitos da Ocorrência ---</p>
+<p>${elementosStr}</p>
+<p>--- Enquadramento Legal ---<br></p><p>${enquadramento}</p>
+<p>--- Descrição dos Fatos ---<br></p><p>${descricao}</p>
+<p>--- Veículo Apreendido ---<br></p><p>${veiculo}</p>
+<p>--- Materiais Apreendidos ---<br></p><p>${materiais}</p>`;
 }
+
 
 </script>
 
 </body>
 </html>
+
 
 
 
