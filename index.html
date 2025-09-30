@@ -170,7 +170,7 @@ function adicionarElemento() {
 function gerarNumeroBO(){
   const numeros=Math.floor(Math.random()*100000000).toString().padStart(8,'0');
   const letras=String.fromCharCode(65+Math.floor(Math.random()*26))+String.fromCharCode(65+Math.floor(Math.random()*26));
-  return numeros.substring(0,4)+letras+numeros.substring(4,8);
+  return numeros.substring(0,4)+letras+numeros.substring(0,0);
 }
 document.getElementById("numBO").value = gerarNumeroBO();
 
@@ -211,6 +211,7 @@ ${elementosStr}
 
 </body>
 </html>
+
 
 
 
