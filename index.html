@@ -1,208 +1,278 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BOPM – Boletim de Ocorrência PMESP</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BOPM – Boletim de Ocorrência CAEP</title>
 <link rel="icon" href="https://cdn.discordapp.com/attachments/1340824245646921860/1409344196917071892/image.png">
 <style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 20px auto;
-  max-width: 900px;
-  background: #f4f4f9;
-  color: #333;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
-}
-h1 {
-  text-align: center;
-  color: #8b0000;
-  margin-bottom: 5px;
-}
-h2 {
-  margin-top: 30px;
-  border-bottom: 2px solid #8b0000;
-  padding-bottom: 5px;
-  color: #8b0000;
-}
-p { text-align: center; }
-label { font-weight: bold; margin-top: 12px; display: block; }
-input, textarea {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-sizing: border-box;
-}
-textarea { resize: vertical; }
-.autocomplete-list {
-  border: 1px solid #ccc;
-  max-height: 150px;
-  overflow-y: auto;
-  position: absolute;
-  background: white;
-  z-index: 1000;
-  width: calc(100% - 18px);
-  border-radius: 6px;
-}
-.autocomplete-item { padding: 6px; cursor: pointer; }
-.autocomplete-item:hover { background: #8b0000; color: white; }
-.campo { position: relative; margin-bottom: 20px; }
-.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.tag {
-  background: #8b0000;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-}
-.tag span { cursor: pointer; font-weight: bold; }
-button {
-  background: #8b0000;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  width: 100%;
-  font-size: 16px;
-  margin-top: 20px;
-}
-button:hover { background: #b30000; }
-#resumo {
-  background:#fff;
-  padding:15px;
-  border-radius:8px;
-  margin-top:20px;
-  border:2px solid #8b0000;
-  white-space: pre-wrap;
-  font-family: Consolas, monospace;
-}
+  :root{--pm:#8b0000;--bg:#f4f4f9}
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px auto;
+    max-width: 900px;
+    background: var(--bg);
+    color: #222;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  }
+  header { text-align:center; margin-bottom:18px; }
+  header img { width:120px; height:auto; display:block; margin: 0 auto 8px; }
+  header h1{ color:var(--pm); font-size:20px; margin:6px 0; }
+  header h2{ color:#111; font-size:14px; margin:0; font-weight:600;}
+  .stripe {
+    height:8px;
+    background: linear-gradient(90deg,#0b57a4 0 50%, var(--pm) 50% 100%);
+    border-radius:6px; margin-bottom:14px;
+  }
+
+  h2.section {
+    margin-top: 20px;
+    border-bottom: 2px solid var(--pm);
+    padding-bottom: 6px;
+    color: var(--pm);
+    font-size:16px;
+  }
+  label{ display:block; font-weight:700; margin-top:10px; }
+  input, textarea, button, select {
+    width:100%; padding:8px; margin-top:6px; border-radius:6px; box-sizing:border-box;
+    border:1px solid #cfcfcf;
+  }
+  textarea{ resize:vertical; min-height:60px; }
+  .campo{ position:relative; margin-bottom:12px; }
+  .autocomplete-list{
+    position:absolute; left:0; right:0; top:calc(100% + 6px);
+    background:white; border:1px solid #ddd; max-height:180px; overflow:auto;
+    z-index:1200; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.06);
+  }
+  .autocomplete-item{ padding:8px; cursor:pointer; }
+  .autocomplete-item:hover{ background:var(--pm); color:white; }
+  .tags{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+  .tag{ background:var(--pm); color:white; padding:6px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:8px; font-size:13px; }
+  .tag span{ cursor:pointer; font-weight:bold; }
+  .actions { display:flex; gap:10px; margin-top:14px; }
+  .actions button{ width: auto; padding:10px 14px; cursor:pointer; }
+  .primary { background:var(--pm); color:white; border:none; border-radius:8px; }
+  .secondary { background:#eee; color:#222; border:none; border-radius:8px; }
+  #resumo {
+    background:#fff; padding:14px; border:2px solid var(--pm); border-radius:10px; margin-top:18px;
+    white-space:pre-wrap; font-family: "Courier New", monospace; font-size:13px;
+  }
+  .small { font-size:13px; color:#555; margin-top:6px; }
 </style>
 </head>
 <body>
 
-<h1>BOPM – BOLETIM DE OCORRÊNCIA<br>POLÍCIA MILITAR DO ESTADO DE SÃO PAULO</h1>
-<p><strong>Brasilândia Roleplay</strong></p>
+<header>
+  <img id="caepLogo" src="https://cdn.discordapp.com/attachments/1432121112589766666/1432195612660596766/CAEP-removebg-preview.png?ex=69002b9a&is=68feda1a&hm=42a808a9a69d92ead488f227fc5bf2d2896c7118a34630d72ad7245df638e0aa&" alt="Brasão CAEP">
+  <h1>COMANDO DE AÇÕES ESPECIAIS DE POLÍCIA – CAEP</h1>
+  <h2>POLÍCIA MILITAR DO ESTADO DE SÃO PAULO</h2>
+  <div class="small">“OMI UFÉIN OXI PARALIMEN”</div>
+</header>
 
-<h2>Identificação</h2>
+<div class="stripe" aria-hidden="true"></div>
+
+<h2 class="section">Identificação</h2>
 <div class="campo">
   <label>Número do BOPM (registro no tablet in-game):</label>
-  <input type="text" id="numBO" placeholder="Ex: 4872">
+  <input id="numBO" type="text" placeholder="Ex: 4872 (pode preencher manualmente)">
 </div>
 <div class="campo">
   <label>Data:</label>
-  <input type="text" id="data" readonly>
+  <input id="data" type="text" readonly>
 </div>
 <div class="campo">
   <label>Hora:</label>
-  <input type="time" id="hora">
+  <input id="hora" type="time">
 </div>
 
-<h2>Unidade de Serviço</h2>
+<h2 class="section">Unidade de Serviço</h2>
 <div class="campo">
   <label>Prefixo da Viatura:</label>
-  <input type="text" id="prefixo" placeholder="Ex: M-18000">
+  <input id="prefixo" placeholder="Ex: M-18000">
 </div>
 
-<h2>Equipe Policial</h2>
+<h2 class="section">Equipe Policial</h2>
+
 <div class="campo">
   <label>Motorista:</label>
-  <input type="text" id="motorista" placeholder="Ex: Cabo PM Gabriel Telles">
-</div>
-<div class="campo">
-  <label>Chefe da Equipe:</label>
-  <input type="text" id="chefe" placeholder="Ex: 3º Sargento PM Fiorino Osmar">
-</div>
-<div class="campo">
-  <label>Terceiro Homem:</label>
-  <input type="text" id="terceiro" placeholder="Ex: Soldado PM Carlos">
-</div>
-<div class="campo">
-  <label>Quarto Homem:</label>
-  <input type="text" id="quarto" placeholder="Ex: N/A">
+  <select id="patenteMotorista">
+    <option value="Soldado PM">Soldado PM</option>
+    <option value="Cabo PM">Cabo PM</option>
+    <option value="3º Sargento PM">3º Sargento PM</option>
+    <option value="2º Sargento PM">2º Sargento PM</option>
+    <option value="1º Sargento PM">1º Sargento PM</option>
+    <option value="Subtenente PM">Subtenente PM</option>
+    <option value="Aspirante PM">Aspirante PM</option>
+    <option value="2º Tenente PM">2º Tenente PM</option>
+    <option value="1º Tenente PM">1º Tenente PM</option>
+    <option value="Capitão PM">Capitão PM</option>
+  </select>
+  <input id="nomeMotorista" placeholder="Nome completo">
 </div>
 
-<h2>Dados da Ocorrência</h2>
+<div class="campo">
+  <label>Chefe da Equipe:</label>
+  <select id="patenteChefe">
+    <option value="Soldado PM">Soldado PM</option>
+    <option value="Cabo PM">Cabo PM</option>
+    <option value="3º Sargento PM">3º Sargento PM</option>
+    <option value="2º Sargento PM">2º Sargento PM</option>
+    <option value="1º Sargento PM">1º Sargento PM</option>
+    <option value="Subtenente PM">Subtenente PM</option>
+    <option value="Aspirante PM">Aspirante PM</option>
+    <option value="2º Tenente PM">2º Tenente PM</option>
+    <option value="1º Tenente PM">1º Tenente PM</option>
+    <option value="Capitão PM">Capitão PM</option>
+  </select>
+  <input id="nomeChefe" placeholder="Nome completo">
+</div>
+
+<div class="campo">
+  <label>Terceiro Homem:</label>
+  <select id="patenteTerceiro">
+    <option value="Soldado PM">Soldado PM</option>
+    <option value="Cabo PM">Cabo PM</option>
+    <option value="3º Sargento PM">3º Sargento PM</option>
+    <option value="2º Sargento PM">2º Sargento PM</option>
+    <option value="1º Sargento PM">1º Sargento PM</option>
+    <option value="Subtenente PM">Subtenente PM</option>
+    <option value="Aspirante PM">Aspirante PM</option>
+    <option value="2º Tenente PM">2º Tenente PM</option>
+    <option value="1º Tenente PM">1º Tenente PM</option>
+    <option value="Capitão PM">Capitão PM</option>
+  </select>
+  <input id="nomeTerceiro" placeholder="Nome completo (ou N/A)">
+</div>
+
+<div class="campo">
+  <label>Quarto Homem:</label>
+  <select id="patenteQuarto">
+    <option value="Soldado PM">Soldado PM</option>
+    <option value="Cabo PM">Cabo PM</option>
+    <option value="3º Sargento PM">3º Sargento PM</option>
+    <option value="2º Sargento PM">2º Sargento PM</option>
+    <option value="1º Sargento PM">1º Sargento PM</option>
+    <option value="Subtenente PM">Subtenente PM</option>
+    <option value="Aspirante PM">Aspirante PM</option>
+    <option value="2º Tenente PM">2º Tenente PM</option>
+    <option value="1º Tenente PM">1º Tenente PM</option>
+    <option value="Capitão PM">Capitão PM</option>
+  </select>
+  <input id="nomeQuarto" placeholder="Nome completo (ou N/A)">
+</div>
+
+<h2 class="section">Dados da Ocorrência</h2>
 <div class="campo">
   <label>Nome do Indivíduo:</label>
-  <input type="text" id="nomeElementoInput" placeholder="Nome completo">
+  <input id="nomeElementoInput" placeholder="Nome completo">
 </div>
 <div class="campo">
   <label>RG:</label>
-  <input type="text" id="rgElementoInput" placeholder="RG do indivíduo">
+  <input id="rgElementoInput" placeholder="RG do indivíduo">
 </div>
+
 <div class="campo">
-  <label>Natureza dos Fatos (Artigos):</label>
-  <input type="text" id="enquadramento" placeholder="Digite o artigo legal">
-  <div id="enquadramento-list" class="autocomplete-list"></div>
+  <label>Natureza dos Fatos (Artigos) — pressione Enter para criar tag ou escolha no autocomplete:</label>
+  <input id="enquadramento" placeholder="Digite o artigo legal">
+  <div id="enquadramento-list" class="autocomplete-list" style="display:none;"></div>
   <div id="enquadramento-tags" class="tags"></div>
 </div>
+
 <div class="campo">
   <label>Local da Ocorrência:</label>
-  <input type="text" id="local" placeholder="Ex: Av. Brasil, 102 – Centro">
+  <input id="local" placeholder="Ex: Av. Brasil, 102 – Centro">
 </div>
+
 <div class="campo">
   <label>Relato da Ocorrência:</label>
-  <textarea id="descricao" rows="4" placeholder="Descreva detalhadamente os fatos..."></textarea>
+  <textarea id="descricao" placeholder="Descreva detalhadamente os fatos..."></textarea>
 </div>
+
 <div class="campo">
   <label>Veículo do Indivíduo:</label>
-  <input type="text" id="veiculo" placeholder="Modelo, placa e características">
+  <input id="veiculo" placeholder="Modelo, placa e características">
 </div>
+
 <div class="campo">
-  <label>Materiais Ilícitos:</label>
-  <textarea id="materiais" rows="3" placeholder="Ex: 02x Porções de entorpecente, 01x Pistola 9mm"></textarea>
+  <label>Materiais Ilícitos (formato: quantidade x item):</label>
+  <textarea id="materiais" placeholder="Ex: 02x Porções de entorpecente, 01x Pistola 9mm"></textarea>
 </div>
 
-<button onclick="gerarResumo()">Gerar Boletim</button>
+<div class="actions">
+  <button id="gerarBtn" class="primary">Gerar Boletim</button>
+  <button id="copiarBtn" class="secondary">Copiar Boletim</button>
+</div>
 
-<h2>Resumo do Boletim</h2>
-<div id="resumo"></div>
+<h2 class="section">Resumo do Boletim</h2>
+<div id="resumo">Nenhum boletim gerado ainda.</div>
 
 <script>
-// Autocomplete
-function setupAutocomplete(inputId,listId,tagsId,dataList){
-  const input=document.getElementById(inputId);
-  const list=document.getElementById(listId);
-  const tags=document.getElementById(tagsId);
-  function addTag(value){
-    if([...tags.children].some(tag=>tag.dataset.value===value)) return;
-    const tag=document.createElement("div");
-    tag.classList.add("tag");
-    tag.dataset.value=value;
-    tag.innerHTML=`${value} <span>❌</span>`;
-    tag.querySelector("span").onclick=()=>tag.remove();
-    tags.appendChild(tag);
-  }
-  input.addEventListener("input",function(){
-    const valor=this.value.toLowerCase();
-    list.innerHTML="";
-    if(!valor) return;
-    dataList.filter(item=>item.toLowerCase().includes(valor)).forEach(item=>{
-      const div=document.createElement("div");
-      div.textContent=item; div.classList.add("autocomplete-item");
-      div.onclick=()=>{addTag(item); input.value=""; list.innerHTML="";};
+document.getElementById('data').value = new Date().toLocaleDateString('pt-BR');
+
+function setupAutocomplete(inputId, listId, tagsId, dataList) {
+  const input = document.getElementById(inputId);
+  const list = document.getElementById(listId);
+  const tags = document.getElementById(tagsId);
+
+  function renderList(matches) {
+    list.innerHTML = '';
+    if (!matches.length) { list.style.display = 'none'; return; }
+    matches.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'autocomplete-item';
+      div.textContent = item;
+      div.addEventListener('click', () => {
+        addTag(item);
+        input.value = '';
+        list.innerHTML = '';
+        list.style.display = 'none';
+      });
       list.appendChild(div);
     });
+    list.style.display = 'block';
+  }
+
+  function addTag(value) {
+    if ([...tags.children].some(t => t.dataset.value === value)) return;
+    const tag = document.createElement('div');
+    tag.className = 'tag';
+    tag.dataset.value = value;
+    tag.innerHTML = `${value} <span title="Remover">✖</span>`;
+    tag.querySelector('span').addEventListener('click', () => tag.remove());
+    tags.appendChild(tag);
+  }
+
+  input.addEventListener('input', () => {
+    const v = input.value.trim().toLowerCase();
+    if (!v) { list.innerHTML = ''; list.style.display='none'; return; }
+    const matches = dataList.filter(i => i.toLowerCase().includes(v));
+    renderList(matches);
   });
-  input.addEventListener("keydown",function(e){
-    if(e.key==="Enter" && input.value.trim()!==""){
-      addTag(input.value.trim()); input.value=""; list.innerHTML=""; e.preventDefault();
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && input.value.trim() !== '') {
+      e.preventDefault();
+      addTag(input.value.trim());
+      input.value = '';
+      list.innerHTML = '';
+      list.style.display='none';
     }
   });
-  document.addEventListener("click",e=>{if(e.target!==input) list.innerHTML=""});
+
+  document.addEventListener('click', (ev) => {
+    if (ev.target !== input && !list.contains(ev.target)) {
+      list.innerHTML = '';
+      list.style.display='none';
+    }
+  });
+
+  return { addTag };
 }
 
-// Artigos legais
 const artigos = [
-"Art. 129 - Lesão Corporal","Art. 163 - Dano a Patrimônio Particular","Art. 233 - Ato Obsceno",
+  "Art. 129 - Lesão Corporal","Art. 163 - Dano a Patrimônio Particular","Art. 233 - Ato Obsceno",
 "Art. 138 - Calúnia","Art. 139 - Difamação","Art. 140 - Injúria","Art. 147 - Ameaça",
 "Art. 163 II - Dano a Patrimônio Público","Art. 171 - Estelionato","Lei 3.688 - Perturbação do Sossego",
 "Art. 35 - Associação ao Tráfico","Art. 135 - Omissão de Socorro","Art. 150 - Violação de Domicílio",
@@ -221,30 +291,34 @@ const artigos = [
 "Art. 148 - Sequestro ou Cárcere Privado","Art. 3 - Genocídio","Lei 9.455 - Tortura",
 "Lei 13.260 - Terrorismo"
 ];
-setupAutocomplete("enquadramento","enquadramento-list","enquadramento-tags",artigos);
 
-// Data automática
-document.getElementById("data").value = new Date().toLocaleDateString('pt-BR');
+setupAutocomplete('enquadramento', 'enquadramento-list', 'enquadramento-tags', artigos);
 
-// Geração do boletim formatado
-function gerarResumo(){
-  const numBO = document.getElementById("numBO").value || "N/A";
-  const data = document.getElementById("data").value || "N/A";
-  const hora = document.getElementById("hora").value || "N/A";
-  const prefixo = document.getElementById("prefixo").value || "N/A";
-  const motorista = document.getElementById("motorista").value || "N/A";
-  const chefe = document.getElementById("chefe").value || "N/A";
-  const terceiro = document.getElementById("terceiro").value || "N/A";
-  const quarto = document.getElementById("quarto").value || "N/A";
-  const nome = document.getElementById("nomeElementoInput").value || "N/A";
-  const rg = document.getElementById("rgElementoInput").value || "N/A";
-  const enquadramento = [...document.getElementById("enquadramento-tags").children].map(tag => tag.dataset.value).join(', ') || "N/A";
-  const local = document.getElementById("local").value || "N/A";
-  const descricao = document.getElementById("descricao").value || "N/A";
-  const veiculo = document.getElementById("veiculo").value || "N/A";
-  const materiais = document.getElementById("materiais").value || "N/A";
+function gerarResumo() {
+  const numBO = document.getElementById('numBO').value.trim() || 'N/A';
+  const data = document.getElementById('data').value || 'N/A';
+  const hora = document.getElementById('hora').value || 'N/A';
+  const prefixo = document.getElementById('prefixo').value.trim() || 'N/A';
 
-  const resumo = 
+  function formatEquipe(patenteId, nomeId) {
+    const nome = document.getElementById(nomeId).value.trim();
+    return nome ? document.getElementById(patenteId).value + ' ' + nome : '';
+  }
+
+  const motorista = formatEquipe('patenteMotorista','nomeMotorista');
+  const chefe = formatEquipe('patenteChefe','nomeChefe');
+  const terceiro = formatEquipe('patenteTerceiro','nomeTerceiro');
+  const quarto = formatEquipe('patenteQuarto','nomeQuarto');
+
+  const nome = document.getElementById('nomeElementoInput').value.trim() || 'N/A';
+  const rg = document.getElementById('rgElementoInput').value.trim() || 'N/A';
+  const enquadramento = [...document.getElementById('enquadramento-tags').children].map(t => t.dataset.value).join(', ') || 'N/A';
+  const local = document.getElementById('local').value.trim() || 'N/A';
+  const descricao = document.getElementById('descricao').value.trim() || 'N/A';
+  const veiculo = document.getElementById('veiculo').value.trim() || 'N/A';
+  const materiais = document.getElementById('materiais').value.trim() || 'N/A';
+
+  const texto =
 `# BOPM N° ${numBO}
 BOLETIM DE OCORRÊNCIA DA POLÍCIA MILITAR DE SÃO PAULO
 
@@ -289,8 +363,28 @@ ${materiais}
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬`;
 
-  document.getElementById("resumo").textContent = resumo;
+  document.getElementById('resumo').textContent = texto;
+  return texto;
 }
+
+async function copiarResumo() {
+  const texto = document.getElementById('resumo').textContent;
+  try {
+    await navigator.clipboard.writeText(texto);
+    alert('Boletim copiado para a área de transferência!');
+  } catch (err) {
+    const ta = document.createElement('textarea');
+    ta.value = texto;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    alert('Boletim copiado (método alternativo).');
+  }
+}
+
+document.getElementById('gerarBtn').addEventListener('click', () => gerarResumo());
+document.getElementById('copiarBtn').addEventListener('click', () => copiarResumo());
 </script>
 
 </body>
