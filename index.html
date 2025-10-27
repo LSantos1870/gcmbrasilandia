@@ -1,40 +1,100 @@
 <!DOCTYPE html>
-<link rel="icon" href="https://cdn.discordapp.com/attachments/1340824245646921860/1409344196917071892/image.png?ex=68dc7f90&is=68db2e10&hm=4c28399d01361006bbf42b566eda0d4792dd73168eb0c0d5132fc20d1bd83b15&"
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BOGCM – Boletim de Ocorrência GCM</title>
+<title>BOPM – Boletim de Ocorrência PMESP</title>
+<link rel="icon" href="https://cdn.discordapp.com/attachments/1340824245646921860/1409344196917071892/image.png">
 <style>
-body { font-family: Arial, sans-serif; margin: 20px auto; max-width: 900px; background: #f4f4f9; color: #333; padding: 20px; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
-h1 { text-align: center; color: #003366; margin-bottom: 5px; }
-h2 { margin-top: 30px; border-bottom: 2px solid #003366; padding-bottom: 5px; color: #003366; }
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px auto;
+  max-width: 900px;
+  background: #f4f4f9;
+  color: #333;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+h1 {
+  text-align: center;
+  color: #8b0000;
+  margin-bottom: 5px;
+}
+h2 {
+  margin-top: 30px;
+  border-bottom: 2px solid #8b0000;
+  padding-bottom: 5px;
+  color: #8b0000;
+}
 p { text-align: center; }
 label { font-weight: bold; margin-top: 12px; display: block; }
-input, textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+input, textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
 textarea { resize: vertical; }
-.autocomplete-list { border: 1px solid #ccc; max-height: 150px; overflow-y: auto; position: absolute; background: white; z-index: 1000; width: calc(100% - 18px); border-radius: 6px; }
+.autocomplete-list {
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  background: white;
+  z-index: 1000;
+  width: calc(100% - 18px);
+  border-radius: 6px;
+}
 .autocomplete-item { padding: 6px; cursor: pointer; }
-.autocomplete-item:hover { background: #003366; color: white; }
+.autocomplete-item:hover { background: #8b0000; color: white; }
 .campo { position: relative; margin-bottom: 20px; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.tag { background: #003366; color: white; padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 6px; font-size: 14px; }
+.tag {
+  background: #8b0000;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
 .tag span { cursor: pointer; font-weight: bold; }
-button { background: #003366; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; margin-top: 20px; }
-button:hover { background: #0055aa; }
-#resumo { background:#e8eaf6; padding:15px; border-radius:8px; margin-top:20px; }
-#resumo p { margin:5px 0; }
+button {
+  background: #8b0000;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  margin-top: 20px;
+}
+button:hover { background: #b30000; }
+#resumo {
+  background:#fff;
+  padding:15px;
+  border-radius:8px;
+  margin-top:20px;
+  border:2px solid #8b0000;
+  white-space: pre-wrap;
+  font-family: Consolas, monospace;
+}
 </style>
 </head>
 <body>
 
-<h1>BOGCM – BOLETIM DE OCORRÊNCIA<br>GUARDA CIVIL METROPOLITANA</h1>
+<h1>BOPM – BOLETIM DE OCORRÊNCIA<br>POLÍCIA MILITAR DO ESTADO DE SÃO PAULO</h1>
 <p><strong>Brasilândia Roleplay</strong></p>
 
-<h2>Dados da Ocorrência</h2>
+<h2>Identificação</h2>
 <div class="campo">
-  <label>Número do BOGCM:</label>
-  <input type="text" id="numBO" readonly>
+  <label>Número do BOPM (registro no tablet in-game):</label>
+  <input type="text" id="numBO" placeholder="Ex: 4872">
 </div>
 <div class="campo">
   <label>Data:</label>
@@ -44,56 +104,66 @@ button:hover { background: #0055aa; }
   <label>Hora:</label>
   <input type="time" id="hora">
 </div>
+
+<h2>Unidade de Serviço</h2>
 <div class="campo">
-  <label>Local:</label>
-  <input type="text" id="local" placeholder="Digite o local da ocorrência">
+  <label>Prefixo da Viatura:</label>
+  <input type="text" id="prefixo" placeholder="Ex: M-18000">
 </div>
 
-<h2>Guarnição Responsável</h2>
+<h2>Equipe Policial</h2>
 <div class="campo">
-  <label>Equipe:</label>
-  <input type="text" id="equipe" placeholder="Digite o nome do GCM e pressione Enter">
-  <div id="equipe-list" class="autocomplete-list"></div>
-  <div id="equipe-tags" class="tags"></div>
+  <label>Motorista:</label>
+  <input type="text" id="motorista" placeholder="Ex: Cabo PM Gabriel Telles">
+</div>
+<div class="campo">
+  <label>Chefe da Equipe:</label>
+  <input type="text" id="chefe" placeholder="Ex: 3º Sargento PM Fiorino Osmar">
+</div>
+<div class="campo">
+  <label>Terceiro Homem:</label>
+  <input type="text" id="terceiro" placeholder="Ex: Soldado PM Carlos">
+</div>
+<div class="campo">
+  <label>Quarto Homem:</label>
+  <input type="text" id="quarto" placeholder="Ex: N/A">
 </div>
 
-<h2>Elemento(s) da Ocorrência</h2>
+<h2>Dados da Ocorrência</h2>
 <div class="campo">
-  <label>Nome do Elemento:</label>
-  <input type="text" id="nomeElementoInput" placeholder="Digite o nome do envolvido">
+  <label>Nome do Indivíduo:</label>
+  <input type="text" id="nomeElementoInput" placeholder="Nome completo">
 </div>
 <div class="campo">
   <label>RG:</label>
-  <input type="text" id="rgElementoInput" placeholder="Digite o RG do envolvido">
+  <input type="text" id="rgElementoInput" placeholder="RG do indivíduo">
 </div>
-<button type="button" onclick="adicionarElemento()">Adicionar Elemento</button>
-<div id="elementos-tags" class="tags"></div>
-
-<h2>Enquadramento Legal</h2>
 <div class="campo">
+  <label>Natureza dos Fatos (Artigos):</label>
   <input type="text" id="enquadramento" placeholder="Digite o artigo legal">
   <div id="enquadramento-list" class="autocomplete-list"></div>
   <div id="enquadramento-tags" class="tags"></div>
 </div>
-
-<h2>Descrição dos Fatos</h2>
 <div class="campo">
-  <textarea id="descricao" rows="4" placeholder="Relate os fatos aqui..."></textarea>
+  <label>Local da Ocorrência:</label>
+  <input type="text" id="local" placeholder="Ex: Av. Brasil, 102 – Centro">
+</div>
+<div class="campo">
+  <label>Relato da Ocorrência:</label>
+  <textarea id="descricao" rows="4" placeholder="Descreva detalhadamente os fatos..."></textarea>
+</div>
+<div class="campo">
+  <label>Veículo do Indivíduo:</label>
+  <input type="text" id="veiculo" placeholder="Modelo, placa e características">
+</div>
+<div class="campo">
+  <label>Materiais Ilícitos:</label>
+  <textarea id="materiais" rows="3" placeholder="Ex: 02x Porções de entorpecente, 01x Pistola 9mm"></textarea>
 </div>
 
-<h2>Veículo Apreendido</h2>
-<div class="campo">
-  <input type="text" id="veiculo" placeholder="Informações do veículo">
-</div>
+<button onclick="gerarResumo()">Gerar Boletim</button>
 
-<h2>Materiais Apreendidos</h2>
-<div class="campo">
-  <textarea id="materiais" rows="3" placeholder="Liste os materiais apreendidos"></textarea>
-</div>
-
-<button onclick="gerarResumo()">Exibir Ocorrência</button>
-
-<h2>Resumo da Ocorrência</h2>
+<h2>Resumo do Boletim</h2>
 <div id="resumo"></div>
 
 <script>
@@ -130,9 +200,9 @@ function setupAutocomplete(inputId,listId,tagsId,dataList){
   document.addEventListener("click",e=>{if(e.target!==input) list.innerHTML=""});
 }
 
-// Inicializa autocompletes
-const nomesGCM = [""];
-const artigos = ["Art. 129 - Lesão Corporal","Art. 163 - Dano a Patrimônio Particular","Art. 233 - Ato Obsceno",
+// Artigos legais
+const artigos = [
+"Art. 129 - Lesão Corporal","Art. 163 - Dano a Patrimônio Particular","Art. 233 - Ato Obsceno",
 "Art. 138 - Calúnia","Art. 139 - Difamação","Art. 140 - Injúria","Art. 147 - Ameaça",
 "Art. 163 II - Dano a Patrimônio Público","Art. 171 - Estelionato","Lei 3.688 - Perturbação do Sossego",
 "Art. 35 - Associação ao Tráfico","Art. 135 - Omissão de Socorro","Art. 150 - Violação de Domicílio",
@@ -149,77 +219,79 @@ const artigos = ["Art. 129 - Lesão Corporal","Art. 163 - Dano a Patrimônio Par
 "Art. 33 - Tráfico de Entorpecente","Art. 16 - Porte Ilegal de Arma Restrita",
 "Art. 17 - Comércio Ilegal de Armas ou Explosivos","Art. 121 IV - Homicídio a Servidor Público",
 "Art. 148 - Sequestro ou Cárcere Privado","Art. 3 - Genocídio","Lei 9.455 - Tortura",
-"Lei 13.260 - Terrorismo"];
-setupAutocomplete("equipe","equipe-list","equipe-tags",nomesGCM);
+"Lei 13.260 - Terrorismo"
+];
 setupAutocomplete("enquadramento","enquadramento-list","enquadramento-tags",artigos);
-
-// Elementos
-const elementos=[];
-function adicionarElemento() {
-  const nome=document.getElementById("nomeElementoInput").value.trim();
-  const rg=document.getElementById("rgElementoInput").value.trim();
-  if(!nome) return alert("Digite o nome do elemento!");
-  const tag=document.createElement("div");
-  tag.classList.add("tag"); tag.dataset.nome=nome; tag.dataset.rg=rg;
-  tag.innerHTML=`${nome} (RG: ${rg || 'N/A'}) <span>❌</span>`;
-  tag.querySelector("span").onclick=()=>{tag.remove(); const idx=elementos.findIndex(e=>e.nome===nome&&e.rg===rg); if(idx>-1) elementos.splice(idx,1);};
-  elementos.push({nome,rg}); document.getElementById("elementos-tags").appendChild(tag);
-  document.getElementById("nomeElementoInput").value=""; document.getElementById("rgElementoInput").value="";
-}
-
-// Número B.O aleatório
-function gerarNumeroBO(){
-  const numeros=Math.floor(Math.random()*100000000).toString().padStart(8,'0');
-  const letras=String.fromCharCode(65+Math.floor(Math.random()*26))+String.fromCharCode(65+Math.floor(Math.random()*26));
-  return numeros.substring(0,4)+letras+numeros.substring(0,0);
-}
-document.getElementById("numBO").value = gerarNumeroBO();
 
 // Data automática
 document.getElementById("data").value = new Date().toLocaleDateString('pt-BR');
 
-// Exibir resumo
+// Geração do boletim formatado
 function gerarResumo(){
-  const resumoDiv = document.getElementById("resumo");
   const numBO = document.getElementById("numBO").value || "N/A";
   const data = document.getElementById("data").value || "N/A";
   const hora = document.getElementById("hora").value || "N/A";
-  const local = document.getElementById("local").value || "N/A";
-
-  const equipe = [...document.getElementById("equipe-tags").children].map(tag => tag.dataset.value).join(', ') || 'N/A';
+  const prefixo = document.getElementById("prefixo").value || "N/A";
+  const motorista = document.getElementById("motorista").value || "N/A";
+  const chefe = document.getElementById("chefe").value || "N/A";
+  const terceiro = document.getElementById("terceiro").value || "N/A";
+  const quarto = document.getElementById("quarto").value || "N/A";
+  const nome = document.getElementById("nomeElementoInput").value || "N/A";
+  const rg = document.getElementById("rgElementoInput").value || "N/A";
   const enquadramento = [...document.getElementById("enquadramento-tags").children].map(tag => tag.dataset.value).join(', ') || "N/A";
+  const local = document.getElementById("local").value || "N/A";
   const descricao = document.getElementById("descricao").value || "N/A";
   const veiculo = document.getElementById("veiculo").value || "N/A";
   const materiais = document.getElementById("materiais").value || "N/A";
 
-  const elementosStr = elementos.length 
-    ? elementos.map((el, i) => `<p>Suspeito ${i+1}:<br>Nome: ${el.nome}<br>RG: ${el.rg || 'N/A'}</p>`).join("")
-    : "<p>Nome: N/A<br>RG: N/A</p>";
+  const resumo = 
+`# BOPM N° ${numBO}
+BOLETIM DE OCORRÊNCIA DA POLÍCIA MILITAR DE SÃO PAULO
 
-   resumoDiv.innerHTML = 
-`<p><b> BOGCM – BOLETIM DE OCORRÊNCIA GUARDA CIVIL METROPOLITANA</b></p>
-<p>Número do BOGCM: ${numBO}<br>Data/Hora: ${data} ${hora}<br>Local: ${local}</p>
-<p>--- Agentes Responsáveis ---<br> </p><p>${equipe}</p>
-<p><p>--- Suspeitos da Ocorrência ---</p>
-<p>${elementosStr}</p>
-<p>--- Enquadramento Legal ---<br></p><p>${enquadramento}</p>
-<p>--- Descrição dos Fatos ---<br></p><p>${descricao}</p>
-<p>--- Veículo Apreendido ---<br></p><p>${veiculo}</p>
-<p>--- Materiais Apreendidos ---<br></p><p>${materiais}</p>`;
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+# IDENTIFICAÇÃO
+
+**DATA E HORA:**
+Data: ${data}
+Horário: ${hora}
+
+**UNIDADE DE SERVIÇO:**
+Prefixo: ${prefixo}
+
+**POLICIAL MILITAR (EQUIPE):**
+Motorista: ${motorista}
+Chefe da Equipe: ${chefe}
+Terceiro Homem: ${terceiro}
+Quarto Homem: ${quarto}
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+# DADOS DA OCORRÊNCIA
+
+**IDENTIFICAÇÃO DO INDIVÍDUO:**
+${nome} - RG: ${rg}
+
+**NATUREZA DOS FATOS:**
+${enquadramento}
+
+**LOCAL DA OCORRÊNCIA:**
+${local}
+
+**RELATO DA OCORRÊNCIA:**
+${descricao}
+
+**VEÍCULO DO INDIVÍDUO:**
+${veiculo}
+
+**MATERIAIS ILÍCITOS:**
+${materiais}
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬`;
+
+  document.getElementById("resumo").textContent = resumo;
 }
-
-
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
